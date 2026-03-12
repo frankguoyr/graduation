@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import com.yupi.aicodehelper.repository.MessageRepository;
 import com.yupi.aicodehelper.entity.Message;
+import com.yupi.aicodehelper.repository.ConversationRepository;
+import com.yupi.aicodehelper.entity.Conversation;
 
 @RestController
 @RequestMapping("/ai")
@@ -19,6 +21,9 @@ public class AiController {
 
     @Resource
     private AiCodeHelperService aiCodeHelperService;
+
+    @Resource
+    private ConversationRepository conversationRepository;
 
     @GetMapping("/chat")
     public Flux<ServerSentEvent<String>> chat(Long conversationId, String message) {
@@ -38,11 +43,31 @@ public class AiController {
                         .data(chunk)
                         .build())
                 .doOnComplete(() -> {
+
+                    // 保存AI消息
                     Message aiMsg = new Message();
                     aiMsg.setConversationId(conversationId);
                     aiMsg.setRole("assistant");
                     aiMsg.setContent(aiResponse.toString());
                     messageRepository.save(aiMsg);
+
+                    // 获取当前会话
+                    Conversation conversation = conversationRepository
+                            .findById(conversationId)
+                            .orElse(null);
+
+                    if (conversation != null && "新对话".equals(conversation.getTitle())) {
+
+                        // 调用AI生成标题
+                        String prompt = "请根据用户的问题生成一个不超过12个字的标题，要求符合用户的对话，只返回生产的标题：" + message;
+
+                        String title = aiCodeHelperService.chat(prompt);
+
+                        conversation.setTitle(title.trim());
+
+                        conversationRepository.save(conversation);
+                    }
+
                 });
     }
     

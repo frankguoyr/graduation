@@ -213,7 +213,7 @@ export default {
       this.finishAiResponse()
     },
     
-    finishAiResponse() {
+    async finishAiResponse() {
       this.isStreaming = false
       
       // 如果有内容，添加到消息列表
@@ -234,6 +234,8 @@ export default {
         this.currentEventSource.close()
         this.currentEventSource = null
       }
+
+      await this.loadConversations()
     },
     
     scrollToBottom() {

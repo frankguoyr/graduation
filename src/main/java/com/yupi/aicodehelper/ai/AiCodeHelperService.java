@@ -28,4 +28,7 @@ public interface AiCodeHelperService {
 
     // 流式对话
     Flux<String> chatStream(@MemoryId int memoryId, @UserMessage String userMessage);
+
+    @SystemMessage("请根据用户的问题生成一个不超过12个字的标题，要求符合用户的对话，只返回生成的标题，不要解释")
+    String generateTitle(@UserMessage String userMessage);
 }
