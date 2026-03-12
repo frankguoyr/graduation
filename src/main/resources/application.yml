@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: ai-code-helper
+  datasource:
+    url: jdbc:mysql://localhost:3306/graduation_test
+    username: root
+    password: guo991230
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8081
+  servlet:
+    context-path: /api
+langchain4j:
+  community:
+    dashscope:
+      chat-model:
+        model-name: qwen-max
+        api-key: sk-1b97e58cb5ff45ba9e1dc92ddcb03671
+      streaming-chat-model:
+        model-name: qwen-max
+        api-key: sk-1b97e58cb5ff45ba9e1dc92ddcb03671
+      embedding-model:
+        model-name: text-embedding-v4
+        api-key: sk-1b97e58cb5ff45ba9e1dc92ddcb03671
+bigmodel:
+  api-key: 939cd0ac7d454ad49463e083d16e6fa4.7VGqY3BeOJyHAwSW
