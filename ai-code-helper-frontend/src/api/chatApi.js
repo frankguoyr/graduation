@@ -111,3 +111,13 @@ export function deleteConversation(id) {
     })
 }
 
+
+export const renameConversation = (id, title) => {
+    return axios.put(`${API_BASE_URL}/conversation/rename`, null, {
+      params: {
+        id,
+        title
+      }
+    })
+  }
+

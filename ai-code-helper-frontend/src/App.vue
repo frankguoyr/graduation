@@ -15,16 +15,29 @@
           class="conversation-item"
           @click="loadMessages(c.id)"
         >
-          <span>
+
+          <span class="conversation-title">
             {{ c.title }}
           </span>
 
-          <button
-            class="delete-btn"
-            @click.stop="handleDeleteConversation(c.id)"
-          >
-            ×
-          </button>
+          <div class="conversation-actions">
+
+            <button
+              class="rename-btn"
+              @click.stop="renameConversationTitle(c)"
+            >
+              ✏️
+            </button>
+
+            <button
+              class="delete-btn"
+              @click.stop="handleDeleteConversation(c.id)"
+            >
+              ×
+            </button>
+
+          </div>
+
         </div>
       </div>
 
@@ -113,7 +126,7 @@ import {
 } from './api/chatApi.js'
 // import { generateMemoryId } from './utils/index.js'
 import { marked } from 'marked'
-import { createConversation, getConversationList, getMessages, deleteConversation} from './api/chatApi.js'
+import { createConversation, getConversationList, getMessages, deleteConversation, renameConversation} from './api/chatApi.js'
 
 export default {
   name: 'App',
@@ -322,6 +335,18 @@ export default {
 
       }
 
+    },
+
+    async renameConversationTitle(c) {
+
+      const newTitle = prompt("输入新的话题名称", c.title)
+
+      if (!newTitle) return
+
+      await renameConversation(c.id, newTitle)
+
+      // 更新本地数据
+      c.title = newTitle
     }
 
   },
@@ -721,5 +746,22 @@ export default {
 
 .delete-btn:hover {
   color: red;
+}
+
+.conversation-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.rename-btn {
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.rename-btn:hover {
+  color: #4CAF50;
 }
 </style> 

@@ -59,4 +59,17 @@ public class ConversationController {
         // 删除会话
         conversationRepository.deleteById(id);
     }
+
+
+    @PutMapping("/rename")
+    public Conversation rename(Long id, String title) {
+
+        Conversation conversation = conversationRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("会话不存在"));
+
+        conversation.setTitle(title);
+
+        return conversationRepository.save(conversation);
+    }
 }
