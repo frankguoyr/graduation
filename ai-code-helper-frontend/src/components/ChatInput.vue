@@ -75,79 +75,54 @@ export default {
 
 <style scoped>
 .chat-input {
-  padding: 20px;
-  background-color: white;
-  border-top: 1px solid #e1e5e9;
+  padding: 15px;
+
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(10px);
+
+  border-top: 1px solid rgba(0,0,0,0.05);
 }
 
 .input-container {
   display: flex;
-  align-items: flex-end;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
+
   max-width: 800px;
   margin: 0 auto;
+
+  background: rgba(255,255,255,0.9);
+  padding: 10px 14px;
+
+  border-radius: 30px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .input-textarea {
   flex: 1;
-  padding: 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 24px;
-  font-size: 14px;
-  line-height: 1.4;
-  resize: none;
+  border: none;
+  background: transparent;
   outline: none;
-  transition: border-color 0.2s;
-  min-height: 44px;
-  max-height: 120px;
-  overflow-y: auto;
-}
-
-.input-textarea:focus {
-  border-color: #007bff;
-}
-
-.input-textarea:disabled {
-  background-color: #f5f5f5;
-  color: #999;
-  cursor: not-allowed;
+  font-size: 14px;
 }
 
 .send-button {
-  width: 44px;
-  height: 44px;
-  background-color: #007bff;
-  border: none;
+  width: 42px;
+  height: 42px;
+
   border-radius: 50%;
+  border: none;
+
+  background: linear-gradient(135deg, #667eea, #5a67d8);
   color: white;
+
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s;
-  flex-shrink: 0;
+
+  transition: 0.2s;
 }
 
-.send-button:hover:not(:disabled) {
-  background-color: #0056b3;
-}
-
-.send-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-@media (max-width: 768px) {
-  .chat-input {
-    padding: 15px;
-  }
-  
-  .input-container {
-    gap: 8px;
-  }
-  
-  .input-textarea {
-    font-size: 16px; /* 防止在移动设备上自动缩放 */
-  }
+.send-button:hover {
+  transform: scale(1.05);
 }
 </style> 

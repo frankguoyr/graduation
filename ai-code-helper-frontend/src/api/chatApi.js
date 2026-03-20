@@ -3,6 +3,24 @@ import axios from 'axios'
 // 配置axios基础URL
 const API_BASE_URL = 'http://localhost:8081/api'
 
+const request = axios.create({
+    baseURL: API_BASE_URL
+  })
+  
+  // ⭐ 请求拦截器
+  request.interceptors.request.use(config => {
+    const userId = localStorage.getItem("userId")
+  
+    if (userId) {
+      config.headers["userId"] = userId
+    }
+  
+    return config
+  })
+  
+  export default request
+
+
 /**
  * 使用 SSE 方式调用聊天接口
  * @param {number} memoryId 聊天室ID
@@ -16,7 +34,8 @@ export function chatWithSSE(conversationId, message, onMessage, onError, onClose
     // 构建URL参数
     const params = new URLSearchParams({
         conversationId: conversationId,
-        message: message
+        message: message,
+        userId: localStorage.getItem("userId")
     })
     
     // 创建 EventSource 连接
@@ -81,21 +100,21 @@ export async function checkServiceHealth() {
  * 新建会话
  */
 export function createConversation() {
-    return axios.post(`${API_BASE_URL}/conversation/create`)
+    return request.post('/conversation/create')
 }
 
 /**
  * 获取会话列表
  */
 export function getConversationList() {
-    return axios.get(`${API_BASE_URL}/conversation/list`)
+    return request.get('/conversation/list')
 }
 
 /**
  * 获取聊天记录
  */
 export function getMessages(conversationId) {
-    return axios.get(`${API_BASE_URL}/conversation/messages`, {
+    return request.get('/conversation/messages', {
         params: {
             conversationId
         }
@@ -106,14 +125,14 @@ export function getMessages(conversationId) {
  * 删除会话
  */
 export function deleteConversation(id) {
-    return axios.delete(`${API_BASE_URL}/conversation/delete`, {
+    return request.delete('/conversation/delete', {
       params: { id }
     })
 }
 
 
 export const renameConversation = (id, title) => {
-    return axios.put(`${API_BASE_URL}/conversation/rename`, null, {
+    return request.put('/conversation/rename', null, {
       params: {
         id,
         title

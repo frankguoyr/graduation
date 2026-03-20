@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-    List<Message> findByConversationIdOrderByCreateTimeAsc(Long conversationId);
+    List<Message> findByConversationIdAndUserIdOrderByCreateTimeAsc(Long conversationId, Long userId);
 
     @Modifying
     @Transactional

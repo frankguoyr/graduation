@@ -1,6 +1,7 @@
 package com.yupi.aicodehelper.controller;
 
 import com.yupi.aicodehelper.ai.AiCodeHelperService;
+import com.yupi.aicodehelper.utils.LoginContext;
 import jakarta.annotation.Resource;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +27,23 @@ public class AiController {
     private ConversationRepository conversationRepository;
 
     @GetMapping("/chat")
-    public Flux<ServerSentEvent<String>> chat(Long conversationId, String message) {
+    public Flux<ServerSentEvent<String>> chat(Long conversationId, String message, Long userId) {
+
+        LoginContext.set(userId);
+
+        Long currentUserId = LoginContext.get();
+
+        Conversation conversation = conversationRepository
+                .findById(conversationId)
+                .orElseThrow(() -> new RuntimeException("会话不存在"));
+
+        if (conversation.getUserId() == null || !conversation.getUserId().equals(userId)) {
+            throw new RuntimeException("无权限访问该会话");
+        }
 
         // 保存用户消息
         Message userMsg = new Message();
+        userMsg.setUserId(currentUserId);
         userMsg.setConversationId(conversationId);
         userMsg.setRole("user");
         userMsg.setContent(message);
@@ -46,15 +60,16 @@ public class AiController {
 
                     // 保存AI消息
                     Message aiMsg = new Message();
+                    aiMsg.setUserId(currentUserId);
                     aiMsg.setConversationId(conversationId);
                     aiMsg.setRole("assistant");
                     aiMsg.setContent(aiResponse.toString());
                     messageRepository.save(aiMsg);
 
-                    // 获取当前会话
-                    Conversation conversation = conversationRepository
-                            .findById(conversationId)
-                            .orElse(null);
+//                    // 获取当前会话
+//                    Conversation conversation = conversationRepository
+//                            .findById(conversationId)
+//                            .orElse(null);
 
                     if (conversation != null && "新对话".equals(conversation.getTitle())) {
 

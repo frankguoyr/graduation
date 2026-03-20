@@ -64,8 +64,9 @@ export default {
 <style scoped>
 .chat-message {
   display: flex;
+  align-items: flex-start;
   margin-bottom: 20px;
-  padding: 0 20px;
+  padding: 0 40px;  
 }
 
 .user-message {
@@ -96,22 +97,29 @@ export default {
 
 .message-avatar {
   display: flex;
-  align-items: flex-start;
+  align-items: center;   
   margin: 0 10px;
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   font-size: 14px;
   font-weight: bold;
   color: white;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
+.message-bubble {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
 .user-avatar {
   background-color: #007bff;
 }
@@ -121,8 +129,11 @@ export default {
 }
 
 .message-content {
-  max-width: 70%;
+  max-width: 65%;
   min-width: 100px;
+
+  display: flex;
+  flex-direction: column;
 }
 
 .message-bubble {
@@ -134,15 +145,21 @@ export default {
 }
 
 .user-message .message-bubble {
-  background-color: #007bff;
+  background: linear-gradient(135deg, #667eea, #5a67d8);
   color: white;
+
+  border-radius: 16px;
   border-bottom-right-radius: 4px;
 }
 
 .ai-message .message-bubble {
-  background-color: #f1f3f4;
+  background: rgba(255, 255, 255, 0.9);
   color: #333;
+
+  border-radius: 16px;
   border-bottom-left-radius: 4px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .message-text {

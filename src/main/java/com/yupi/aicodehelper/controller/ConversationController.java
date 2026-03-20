@@ -4,6 +4,7 @@ import com.yupi.aicodehelper.entity.Conversation;
 import com.yupi.aicodehelper.entity.Message;
 import com.yupi.aicodehelper.repository.ConversationRepository;
 import com.yupi.aicodehelper.repository.MessageRepository;
+import com.yupi.aicodehelper.utils.LoginContext;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,20 +27,32 @@ public class ConversationController {
     @PostMapping("/create")
     public Conversation create() {
 
+        Long userId = LoginContext.get();
+
+        if (userId == null) {
+            throw new RuntimeException("用户未登录");
+        }
+
         Conversation conversation = new Conversation();
         conversation.setTitle("新对话");
+        conversation.setUserId(userId);
 
         return conversationRepository.save(conversation);
     }
 
     @GetMapping("/list")
     public List<Conversation> list() {
-        return conversationRepository.findAll();
+        Long userId = LoginContext.get();
+        return conversationRepository.findByUserId(userId);
     }
 
     @GetMapping("/messages")
     public List<Message> messages(Long conversationId) {
-        return messageRepository.findByConversationIdOrderByCreateTimeAsc(conversationId);
+
+        Long userId = LoginContext.get();
+
+        return messageRepository
+                .findByConversationIdAndUserIdOrderByCreateTimeAsc(conversationId, userId);
     }
 
     @DeleteMapping("/{id}")
@@ -53,11 +66,19 @@ public class ConversationController {
     @Transactional
     public void deleteConversation(Long id) {
 
-        // 删除该会话的所有消息
-        messageRepository.deleteByConversationId(id);
+        Long userId = LoginContext.get();
 
-        // 删除会话
+        Conversation conversation = conversationRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("会话不存在"));
+
+        if (!conversation.getUserId().equals(userId)) {
+            throw new RuntimeException("非法操作");
+        }
+
+        messageRepository.deleteByConversationId(id);
         conversationRepository.deleteById(id);
+
     }
 
 
