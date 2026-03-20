@@ -47,7 +47,7 @@
   <div class="chat-main">
     <!-- 头部标题 -->
     <div class="app-header">
-      <h1 class="app-title">AI 编程小助手</h1>
+      <h1 class="app-title">基于 LangChain4j 与通义千问的 AI 编程学习与求职辅导系统</h1>
       <div class="app-subtitle">帮助您解答编程学习和求职面试相关问题</div>
     </div>
 

@@ -18,4 +18,6 @@ public class Conversation {
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
+
+    private Long userId;
 }

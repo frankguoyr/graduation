@@ -17,6 +17,8 @@ public class Message {
 
     private String role;
 
+    private Long userId;
+
     @Column(columnDefinition = "TEXT")
     private String content;
 
