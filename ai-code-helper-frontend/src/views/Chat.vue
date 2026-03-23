@@ -49,6 +49,23 @@
           </div>
         </div>
 
+        <div class="sidebar-footer" v-if="!sidebarCollapsed">
+
+          <div class="user-card">
+            <div class="avatar">
+              {{ username ? username.charAt(0).toUpperCase() : 'U' }}
+            </div>
+
+            <div class="user-name">
+              {{ username }}
+            </div>
+          </div>
+
+          <button class="logout-btn" @click="handleLogout">
+            退出登录
+          </button>
+
+        </div>
       </div>
 
       <!-- 右侧聊天 -->
@@ -146,6 +163,7 @@ export default {
   },
   data() {
     return {
+      username: "",
       messages: [],
       conversationId: null,
       conversations: [],
@@ -357,12 +375,30 @@ export default {
 
     toggleSidebar() {
       this.sidebarCollapsed = !this.sidebarCollapsed
+    },
+
+    handleLogout() {
+
+      if (!confirm("确定退出登录吗？")) return
+
+      // 清除用户信息
+      localStorage.removeItem("userId")
+      localStorage.removeItem("username")
+
+      // 跳转登录页
+      this.$router.push("/login")
     }
 
   },
 
   async mounted() {
 
+    if (!localStorage.getItem("userId")) {
+      this.$router.push("/login")
+      return
+    }
+
+    this.username = localStorage.getItem("username")
     await this.loadConversations()
 
     if (this.conversations.length > 0) {
@@ -502,13 +538,17 @@ export default {
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
+
   border-radius: 50%;
+
+  background: linear-gradient(135deg,#ff9a44,#ff6a00);
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+
   font-weight: bold;
   color: white;
 }
@@ -715,7 +755,8 @@ export default {
 
 .sidebar {
   position: relative;
-
+  display: flex;
+  flex-direction: column;
   width: 260px;
 
   padding: 15px;
@@ -726,6 +767,11 @@ export default {
   background: rgba(0,0,0,0.6);
   backdrop-filter: blur(10px);
   color: white;
+}
+
+.sidebar-footer {
+  padding: 12px;
+  border-top: 1px solid rgba(255,255,255,0.15);
 }
 
 .sidebar.collapsed {
@@ -801,6 +847,10 @@ export default {
 
 .conversation-list {
   margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;          /* ⭐关键：占满剩余空间 */
+  overflow-y: auto; /* ⭐聊天多的时候可滚动 */
 }
 
 .conversation-item {
@@ -872,4 +922,46 @@ export default {
 .rename-btn:hover {
   color: #4CAF50;
 }
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px;
+  border-radius: 8px;
+
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.user-card:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.logout-btn {
+  width: 100%;
+  margin-top: 8px;
+
+  padding: 8px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: rgba(255,255,255,0.1);
+  color: white;
+
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
 </style>

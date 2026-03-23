@@ -35,7 +35,9 @@ export default {
           password: this.password
         })
 
+        // 保存用户信息
         localStorage.setItem("userId", res.data)
+        localStorage.setItem("username", this.username)
 
         this.$router.push("/")
       } catch (e) {
